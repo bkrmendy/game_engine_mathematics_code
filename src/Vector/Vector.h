@@ -31,6 +31,10 @@ public:
         return !(*this == other);
     }
 
+    Vector<N, T> negate() const {
+        return (*this) * -1;
+    }
+
     void operator+=(const T& scalar) {
         for (auto& elem : elems_) {
             elem += scalar;
@@ -65,7 +69,7 @@ public:
         }
     }
 
-    Vector<N, T> operator * (const T& scalar) const  {
+    Vector<N, T> operator*(const T& scalar) const  {
         auto newElems = elems_;
         for (auto& elem : newElems) {
             elem *= scalar;
@@ -89,6 +93,15 @@ public:
         return result;
     }
 };
+
+template <typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+Vector<3, T> cross(const Vector<3, T>& p, const Vector<3, T>& q) {
+    return Vector<3, T> {{
+                                 p.at(1) * q.at(2) - p.at(2) * q.at(1),
+                                 p.at(2) * q.at(0) - p.at(0) * q.at(2),
+                                 p.at(0) * q.at(1) - p.at(1) * q.at(0)
+                         }};
+}
 
 
 #endif //MYPROJECT_VECTOR_H
