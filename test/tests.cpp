@@ -3,24 +3,9 @@
 #include <vector>
 #include <type_traits>
 #include <random>
+#include <rapidcheck.h>
 
 #include "../src/Vector/Vector.h"
-
-template <typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
-std::vector<T> randomNumbers(size_t count, T lower, T upper) {
-    const T range_from = lower;
-    const T range_to = upper;
-    std::random_device rand_dev;
-    std::mt19937 generator(rand_dev());
-    std::uniform_int_distribution<T> distribution(range_from, range_to);
-
-    std::vector<T> result{};
-
-    for (size_t i = 0; i < count; ++i) {
-        result.push_back(distribution(generator));
-    }
-    return result;
-}
 
 template <unsigned int N, typename T>
 Vector<N, T> scalarAdd(const Vector<N, T>& v1, const T& scalar) {
@@ -45,26 +30,24 @@ TEST_CASE("Factorials are computed", "[factorial]")
     }
 
     SECTION("Vector scalar addition", "[Vector]") {
-        auto randoms = randomNumbers<int>(10, 0, 100);
-        for (auto scalar : randoms) {
+        rc::check("Vector scalar addition", [](const int scalar) {
             Vector<3, int> v1{{1, 2, 3}};
             auto result = scalarAdd(v1, scalar);
             for (size_t i = 0; i < 3; ++i) {
                 REQUIRE(result.at(i) - scalar == v1.at(i));
             }
-        }
+        });
     }
 
     SECTION("Vector scalar +=", "[Vector]") {
-        auto randoms = randomNumbers<int>(10, 0, 100);
-        for (auto scalar : randoms) {
-            std::array<int, 3> backer = {3, 2, 1};
+        std::array<int, 3> backer = {3, 2, 1};
+        rc::check("Vector scalar in-place addition", [&backer](const int scalar) {
             Vector<3, int> v2{backer};
             v2 += scalar;
             for (size_t i = 0; i < 3; ++i) {
                 REQUIRE(v2.at(i) == backer.at(i) + scalar);
             }
-        }
+        });
     }
 
     SECTION("Vector-vector addition", "[Vector]") {
