@@ -5,12 +5,12 @@ else()
   include(${CONAN_CATCH2_ROOT}/lib/cmake/Catch2/Catch.cmake)
 endif()
 
-add_library(catch_main STATIC catch_main.cpp)
+add_library(catch_main STATIC catch_main.cpp tests_matrix.cpp)
 target_link_libraries(catch_main PUBLIC CONAN_PKG::catch2)
 target_link_libraries(catch_main PUBLIC CONAN_PKG::rapidcheck)
 target_link_libraries(catch_main PRIVATE project_options)
 
-add_executable(tests tests.cpp)
+add_executable(tests tests.cpp tests_matrix.cpp)
 target_link_libraries(tests PRIVATE project_warnings project_options catch_main)
 
 # automatically discover tests that are defined in catch based test files you can modify the unittests. TEST_PREFIX to

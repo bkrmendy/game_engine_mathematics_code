@@ -7,18 +7,18 @@
 
 #include "../src/Vector/Vector.h"
 
-template <unsigned int N, typename T>
+template <size_t N, typename T>
 Vector<N, T> scalarAdd(const Vector<N, T>& v1, const T& scalar) {
     return v1 + scalar;
 
 }
 
-template <unsigned int N, typename T>
+template <size_t N, typename T>
 T dotProduct(const Vector<N, T>& v1, const Vector<N, T>& v2) {
     return v1.dot(v2);
 }
 
-TEST_CASE("Factorials are computed", "[factorial]")
+TEST_CASE("Vector operations", "[Vectors]")
 {
     SECTION("Vector negation", "[Vector]") {
         Vector<3, int> v1{{1,2,3}};

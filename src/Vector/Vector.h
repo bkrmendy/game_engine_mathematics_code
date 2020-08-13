@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <array>
 
-template <unsigned int N, typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+template <size_t N, typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
 class Vector {
     std::array<T, N> elems_;
 public:
