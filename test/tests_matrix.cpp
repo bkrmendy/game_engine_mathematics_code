@@ -326,42 +326,82 @@ TEST_CASE("Matrix operations", "[matrix]") {
     }
 
     SECTION("Inverse") {
-        auto matrix2x2 = Matrix<int, 2, 2>{{
-            1,2,
-            3,4
-        }};
+        SECTION("2x2") {
+            auto matrix2x2 = Matrix<int, 2, 2>{{
+                                                       1,2,
+                                                       3,4
+                                               }};
 
-        auto actualInverse2x2 = Matrix<double, 2, 2>{{
-            -2, 1,
-            1.5, -0.5
-        }};
+            auto actualInverse2x2 = Matrix<double, 2, 2>{{
+                                                                 -2, 1,
+                                                                 1.5, -0.5
+                                                         }};
 
-        REQUIRE(is_invertible(matrix2x2));
-        REQUIRE(inverse(matrix2x2) == actualInverse2x2);
+            REQUIRE(is_invertible(matrix2x2));
+            REQUIRE(inverse(matrix2x2) == actualInverse2x2);
+        }
 
-        auto matrix3x3 = Matrix<double, 3,3> {{
-            1,2,3,
-            0,1,4,
-            5,6,0
-        }};
+        SECTION("Properties") {
+            auto matrix3x3 = Matrix<double, 3,3> {{
+                                                          1,2,3,
+                                                          0,1,4,
+                                                          5,6,0
+                                                  }};
 
-        auto actualInverse3x3 = Matrix<double, 3, 3> {{
-            -24, 18, 5,
-            20, -15, -4,
-            -5, 4, 1
-        }};
+            auto actualInverse3x3 = Matrix<double, 3, 3> {{
+                                                                  -24, 18, 5,
+                                                                  20, -15, -4,
+                                                                  -5, 4, 1
+                                                          }};
 
-        auto result = inverse(matrix3x3);
+            REQUIRE(is_invertible(matrix3x3));
+            REQUIRE(is_invertible(transposed(matrix3x3)));
 
-        REQUIRE(is_invertible(matrix3x3));
-        REQUIRE(result.has_value());
+            auto result = inverse(matrix3x3);
 
-        REQUIRE(inverse(matrix3x3) == actualInverse3x3);
+            REQUIRE(result.has_value());
 
-        REQUIRE(result.value() * matrix3x3 == matrix3x3 * result.value());
+            REQUIRE(inverse(matrix3x3) == actualInverse3x3);
 
-        REQUIRE(result.value() * matrix3x3 == Matrix<double, 3, 3>::Identity());
+            REQUIRE(result.value() * matrix3x3 == matrix3x3 * result.value());
 
-        REQUIRE(matrix3x3 * result.value() == Matrix<double, 3, 3>::Identity());
+            REQUIRE(result.value() * matrix3x3 == Matrix<double, 3, 3>::Identity());
+
+            REQUIRE(matrix3x3 * result.value() == Matrix<double, 3, 3>::Identity());
+
+            auto inverseAgain = inverse(result.value());
+
+            REQUIRE(inverseAgain.has_value());
+            REQUIRE(inverseAgain.value() == matrix3x3);
+        }
+
+        SECTION("Inverse associativity") {
+            auto m1 = Matrix<double, 3,3> {{
+                                                          1,2,3,
+                                                          0,1,4,
+                                                          5,6,0
+                                                  }};
+
+            auto m2 = Matrix<double, 3, 3> {{
+                                                    0, -3, -2,
+                                                    1, -4, -2,
+                                                    -3, 4, 1
+                                            }};
+
+            REQUIRE(is_invertible(m1));
+            REQUIRE(is_invertible(m2));
+
+            auto result1 = inverse(m1);
+            auto result2 = inverse(m2);
+
+            auto m1TimesM2 = m1 * m2;
+
+            REQUIRE(is_invertible(m1TimesM2));
+
+            auto resultTimes = inverse(m1TimesM2);
+
+            REQUIRE(resultTimes.has_value());
+            REQUIRE(resultTimes.value() == result2.value() * result1.value());
+        }
     }
 }
