@@ -17,6 +17,11 @@ namespace GEM {
         Vector() : elems_{std::array<T, N>{}} { }
         explicit Vector(std::array<T, N> elems) : elems_{elems} { };
 
+        T& at(size_t idx) {
+            assert(idx < N);
+            return elems_.at(idx);
+        }
+
         const T& at(size_t idx) const {
             assert(idx < N);
             return elems_.at(idx);

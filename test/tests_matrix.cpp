@@ -203,6 +203,62 @@ TEST_CASE("Matrix operations", "[matrix]") {
         }
     }
 
+    SECTION("Multiply matrix with vector") {
+        SECTION("2x2") {
+            auto mat = Matrix<int, 2, 2> {{
+                1,2,
+                3,4
+            }};
+
+            auto vec = Vector<2, int> {{
+                5,6
+            }};
+
+            auto result = Vector<2, int> {{
+                17, 39
+            }};
+
+            REQUIRE(mat * vec == result);
+        }
+
+        SECTION("3x3") {
+            auto mat = Matrix<int, 3, 3> {{
+                                                  1,2, 3,
+                                                  4,5, 6,
+                                                  7,8,9
+                                          }};
+
+            auto vec = Vector<3, int> {{
+                                               10, 11, 12
+                                       }};
+
+            auto result = Vector<3, int> {{
+                                                  68, 167, 266
+                                          }};
+
+            REQUIRE(mat * vec == result);
+        }
+
+        SECTION("4x4") {
+            auto mat = Matrix<int, 4,4> {{
+                1,2,3,4,
+                5,6,7,8,
+                9,10,11,12,
+                                                 13, 14, 15, 16
+            }};
+
+            auto vec = Vector<4, int> {{
+                17, 18, 19, 20
+            }};
+
+            auto res = Vector<4, int> {{
+                                               190, 486, 782, 1078
+            }};
+
+            REQUIRE(mat * vec == res);
+        }
+    }
+
     SECTION("Submatrix", "[Matrix]") {
         auto matrix = Matrix<int, 3, 3> {{
                                                  1,2,3,

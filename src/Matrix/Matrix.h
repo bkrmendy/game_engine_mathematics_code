@@ -10,6 +10,8 @@
 #include <cmath>
 #include <optional>
 
+#include "../Vector/Vector.h"
+
 #include "../Utility/FloatingPointEquals.h"
 
 namespace GEM {
@@ -115,6 +117,21 @@ namespace GEM {
                 result.at(i, j) = acc;
             }
         }
+        return result;
+    }
+
+    template<typename T, size_t N, size_t M, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    Vector<N, T> operator*(const Matrix<T, N, M> matrix, const Vector<M, T>& vector) {
+        Vector<N, T> result{};
+
+        for (size_t i = 0; i < N; ++i) {
+            T acc = 0;
+            for (size_t j = 0; j < M; ++j) {
+                acc += matrix.at(i, j) * vector.at(j);
+            }
+            result.at(i) = acc;
+        }
+
         return result;
     }
 
