@@ -42,7 +42,7 @@ if(CPP_STARTER_USE_NANA)
 endif()
 
 # Generic test that uses conan libs
-add_executable(intro main.cpp Vector/Vector.h Matrix/Matrix.h Transforms/Transforms.h Utility/Utility.h Utility/FloatingPointEquals.h)
+add_executable(intro main.cpp Vector/Vector.h Matrix/Matrix.h Transforms/Transforms.h Utility/Utility.h Utility/FloatingPointEquals.h Quaternion/Quaternion.h)
 target_link_libraries(
   intro
   PRIVATE project_options
