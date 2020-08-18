@@ -41,17 +41,6 @@ TEST_CASE("Vector operations", "[Vectors]")
         });
     }
 
-    SECTION("Vector scalar +=", "[Vector]") {
-        std::array<int, 3> backer = {3, 2, 1};
-        rc::check("Vector scalar in-place addition", [&backer](const int scalar) {
-            Vector<3, int> v2{backer};
-            v2 += scalar;
-            for (size_t i = 0; i < 3; ++i) {
-                REQUIRE(v2.at(i) == backer.at(i) + scalar);
-            }
-        });
-    }
-
     SECTION("Vector-vector addition", "[Vector]") {
         Vector<3, int> v1{{1,2,3}};
         Vector<3, int> v2{{3,2,1}};

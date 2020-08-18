@@ -40,7 +40,7 @@ TEST_CASE("Matrix operations", "[matrix]") {
             0, 0, 1
         }};
 
-        REQUIRE(diagonal.diagonal());
+        REQUIRE(is_diagonal(diagonal));
 
         Matrix<int, 3, 3> not_diagonal{{
                                            1, 0, 1,
@@ -48,7 +48,7 @@ TEST_CASE("Matrix operations", "[matrix]") {
                                            0, 0, 1
                                    }};
 
-        REQUIRE(!not_diagonal.diagonal());
+        REQUIRE(!is_diagonal(not_diagonal));
     }
 
     SECTION("Matrix::transpose") {
@@ -62,25 +62,9 @@ TEST_CASE("Matrix operations", "[matrix]") {
             3,6
         }};
 
-        const Matrix<int, 3, 2> actualResult = original.transpose();
+        const Matrix<int, 3, 2> actualResult = transposed(original);
 
         REQUIRE(actualResult == result);
-    }
-
-    SECTION("Matrix in place multiplication wih scalar") {
-        Matrix<int, 2, 3> original{{
-                                           1, 2, 3,
-                                           4, 5, 6,
-                                   }};
-        const int scalar = 2;
-        original *= scalar;
-
-        REQUIRE(original.at(0, 0) / scalar == 1);
-        REQUIRE(original.at(0, 1) / scalar == 2);
-        REQUIRE(original.at(0, 2) / scalar == 3);
-        REQUIRE(original.at(1, 0) / scalar == 4);
-        REQUIRE(original.at(1, 1) / scalar == 5);
-        REQUIRE(original.at(1, 2) / scalar == 6);
     }
 
     SECTION("Matrix multiplication by scalar") {
@@ -99,22 +83,6 @@ TEST_CASE("Matrix operations", "[matrix]") {
         REQUIRE(result.at(1, 0) / scalar == 4);
         REQUIRE(result.at(1, 1) / scalar == 5);
         REQUIRE(result.at(1, 2) / scalar == 6);
-    }
-
-    SECTION("Matrix in place addition wih scalar") {
-        Matrix<int, 2, 3> original{{
-                                           1, 2, 3,
-                                           4, 5, 6,
-                                   }};
-        const int scalar = 2;
-        original += scalar;
-
-        REQUIRE(original.at(0, 0) == 3);
-        REQUIRE(original.at(0, 1) == 4);
-        REQUIRE(original.at(0, 2) == 5);
-        REQUIRE(original.at(1, 0) == 6);
-        REQUIRE(original.at(1, 1) == 7);
-        REQUIRE(original.at(1, 2) == 8);
     }
 
     SECTION("Adding scalar to matrix") {

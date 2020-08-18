@@ -7,11 +7,8 @@
 
 #include <numeric>
 
-bool equals(float a, float b, float epsilon = std::numeric_limits<float>::epsilon()) {
-    return fabs(a - b) < epsilon;
-}
-
-bool equals(double a, double b, double epsilon = std::numeric_limits<double>::epsilon()) {
+template <typename T, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr>
+bool equals(T a, T b, T epsilon = std::numeric_limits<T>::epsilon()) {
     return fabs(a - b) < epsilon;
 }
 

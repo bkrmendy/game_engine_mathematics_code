@@ -16,7 +16,7 @@ namespace GEM {
     public:
         explicit Vector(std::array<T, N> elems) : elems_{elems} {};
 
-        T at(size_t idx) const {
+        const T& at(size_t idx) const {
             assert(idx < N);
             return elems_.at(idx);
         }
@@ -37,12 +37,6 @@ namespace GEM {
             return (*this) * -1;
         }
 
-        void operator+=(const T &scalar) {
-            for (auto &elem : elems_) {
-                elem += scalar;
-            }
-        }
-
         Vector<N, T> operator+(const T &scalar) const {
             auto newElems = elems_;
             for (auto &elem : newElems) {
@@ -51,24 +45,12 @@ namespace GEM {
             return Vector<N, T>(newElems);
         }
 
-        void operator+=(const Vector<N, T> &other) {
-            for (size_t i = 0; i < N; ++i) {
-                elems_.at() += other.at(i);
-            }
-        }
-
         Vector<N, T> operator+(const Vector<N, T> &other) const {
             std::array<T, N> elems{};
             for (size_t i = 0; i < N; ++i) {
                 elems.at(i) = this->at(i) + other.at(i);
             }
             return Vector(elems);
-        }
-
-        void operator*=(const T &scalar) {
-            for (auto &elem : elems_) {
-                elem *= scalar;
-            }
         }
 
         Vector<N, T> operator*(const T &scalar) const {
