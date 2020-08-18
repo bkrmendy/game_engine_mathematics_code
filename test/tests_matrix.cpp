@@ -294,4 +294,32 @@ TEST_CASE("Matrix operations", "[matrix]") {
             REQUIRE(determinant(matrix1 * matrix2) == determinant(matrix1) * determinant(matrix2));
         }
     }
+
+    SECTION("Inverse") {
+        auto matrix2x2 = Matrix<int, 2, 2>{{
+            1,2,
+            3,4
+        }};
+
+        auto actualInverse2x2 = Matrix<double, 2, 2>{{
+            -2, 1,
+            1.5, -0.5
+        }};
+
+        REQUIRE(inverse(matrix2x2) == actualInverse2x2);
+
+        auto matrix3x3 = Matrix<double, 3,3> {{
+            1,2,3,
+            0,1,4,
+            5,6,0
+        }};
+
+        auto actualInverse3x3 = Matrix<double, 3, 3> {{
+            -24, 18, 5,
+            20, -15, -4,
+            -5, 4, 1
+        }};
+
+        REQUIRE(inverse(matrix3x3) == actualInverse3x3);
+    }
 }

@@ -168,19 +168,43 @@ namespace GEM {
     template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
     double determinant(const Matrix<T, N, N>& matrix) {
         double acc = 0;
-
+        size_t k = 1;
         for (size_t n = 0; n < N; ++n) {
-            auto cofactor = std::pow(-1, n + 1) * determinant(submatrix(matrix, n, 1));
-            acc += matrix.at(n, 1) * cofactor;
+            auto cofactor = std::pow(-1, n + k) * determinant(submatrix(matrix, n, k));
+            acc += matrix.at(n, k) * cofactor;
         }
 
         return acc;
     }
 
-//    template<typename T, size_t N, size_t M, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
-//    Matrix<T, N, M> inverse(const Matrix<T, N, M>& matrix) {
-//
-//    }
+    template<typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    Matrix<double, 2, 2> inverse(const Matrix<T, 2, 2>& matrix) {
+        auto det = determinant(matrix);
+
+        auto a = static_cast<double>(matrix.at(0,0));
+        auto b = static_cast<double>(matrix.at(0,1));
+        auto c = static_cast<double>(matrix.at(1,0));
+        auto d = static_cast<double>(matrix.at(1,1));
+
+        auto result = Matrix<double, 2, 2>{{
+            d, -b,
+            -c, a
+        }};
+        return result * (1 / det);
+    }
+
+    template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    Matrix<double, N, N> inverse(const Matrix<T, N, N>& matrix) {
+        auto det = determinant(matrix);
+        auto result = Matrix<double, N, N>{};
+        for (size_t i = 0; i < N; ++i) {
+            for(size_t j = 0; j < N; ++j) {
+                auto cofactor = std::pow(-1, i + j) * determinant(submatrix(matrix, j, i));
+                result.at(i, j) = cofactor / det;
+            }
+        }
+        return result;
+    }
     
 }
 
