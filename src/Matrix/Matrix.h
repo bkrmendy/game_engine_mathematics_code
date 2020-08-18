@@ -14,15 +14,16 @@ namespace GEM {
     class Matrix {
         std::array<T, N * M> elements_;
     public:
-        Matrix(std::array<T, N * M> elements) : elements_{elements} {}
+        Matrix() : elements_{std::array<T, N*M>{}} { }
+        Matrix(std::array<T, N * M> elements) : elements_{elements} { }
 
-        const T& at(size_t i, size_t j) const {
+        T& at(size_t i, size_t j) {
             assert(i < N);
             assert(j < M);
             return elements_.at(i * M + j);
         }
 
-        T& at(size_t i, size_t j) {
+        const T& at(size_t i, size_t j) const {
             assert(i < N);
             assert(j < M);
             return elements_.at(i * M + j);
@@ -53,7 +54,7 @@ namespace GEM {
 
     template<typename T, size_t N, size_t M, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
     Matrix<T, N, M> operator*(const Matrix<T, N, M>& matrix, const T& scalar) {
-        Matrix<T, N, M> result{std::array<T, N * M>{}};
+        Matrix<T, N, M> result{};
         for (size_t i = 0; i < N; ++i) {
             for (size_t j = 0; j < M; ++j) {
                 result.at(i, j) = matrix.at(i, j) * scalar;
@@ -64,7 +65,7 @@ namespace GEM {
 
     template<typename T, size_t N, size_t M, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
     Matrix<T, N, M> operator+(const Matrix<T, N, M>& matrix, const T& scalar) {
-        Matrix<T, N, M> result{std::array<T, N * M>{}};
+        Matrix<T, N, M> result{};
         for (size_t i = 0; i < N; ++i) {
             for (size_t j = 0; j < M; ++j) {
                 result.at(i, j) = matrix.at(i, j) + scalar;
@@ -75,7 +76,7 @@ namespace GEM {
 
     template<typename T, size_t N, size_t M, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
     Matrix<T, N, M> operator+(const Matrix<T, N, M>& matrix, const Matrix<T, N, M> other) {
-        Matrix<T, N, M> result{std::array<T, N * M>{}};
+        Matrix<T, N, M> result{};
         for (size_t i = 0; i < N; ++i) {
             for (size_t j = 0; j < M; ++j) {
                 result.at(i, j) = matrix.at(i, j) + other.at(i, j);
@@ -86,7 +87,7 @@ namespace GEM {
 
     template<typename T, size_t N, size_t M, size_t K, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
     Matrix<T, N, K> operator*(const Matrix<T, N, M>& matrix, const Matrix<T, M, K> other) {
-        Matrix<T, N, K> result{std::array<T, N * K>{}};
+        Matrix<T, N, K> result{};
         for (size_t i = 0; i < N; ++i) {
             for (size_t j = 0; j < K; ++j) {
                 T acc = 0;
@@ -101,14 +102,14 @@ namespace GEM {
 
     template<typename T, size_t N, size_t M, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
     Matrix<T, M, N> transposed(const Matrix<T, N, M>& matrix) {
-        std::array<T, M * N> transposedElements{};
+        Matrix<T, M, N> result{};
         for (size_t i = 0; i < N; ++i) {
             for (size_t j = 0; j < M; ++j) {
                 auto elem = matrix.at(i, j);
-                transposedElements.at(j * N + i) = elem;
+                result.at(j, i) = elem;
             }
         }
-        return Matrix<T, M, N>{transposedElements};
+        return result;
     }
 
     template<typename T, size_t N, size_t M, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr>
