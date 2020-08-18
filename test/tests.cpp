@@ -7,6 +7,8 @@
 
 #include "../src/Vector/Vector.h"
 
+using namespace GEM;
+
 template <size_t N, typename T>
 Vector<N, T> scalarAdd(const Vector<N, T>& v1, const T& scalar) {
     return v1 + scalar;

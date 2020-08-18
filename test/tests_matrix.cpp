@@ -3,9 +3,10 @@
 //
 
 #include <catch2/catch.hpp>
-#include <rapidcheck.h>
 
 #include "../src/Matrix/Matrix.h"
+
+using namespace GEM;
 
 TEST_CASE("Matrix operations", "[matrix]") {
     SECTION("Can construct matrix") {
