@@ -6,7 +6,7 @@
 #include <rapidcheck.h>
 
 #include "../src/Matrix/Matrix.h"
-#include "../src/Utils.h"
+#include "../src/Utility/FloatingPointEquals.h"
 
 using namespace GEM;
 
@@ -109,12 +109,12 @@ TEST_CASE("Matrix operations", "[matrix]") {
         rc::check("Matrix multiplication by scalar",[&original](double scalar) {
             auto result = original * scalar;
 
-            REQUIRE(equals(result.at(0, 0), original.at(0, 0) * scalar));
-            REQUIRE(equals(result.at(0, 1), original.at(0, 1) * scalar));
-            REQUIRE(equals(result.at(0, 2), original.at(0, 2) * scalar));
-            REQUIRE(equals(result.at(1, 0), original.at(1, 0) * scalar));
-            REQUIRE(equals(result.at(1, 1), original.at(1, 1) * scalar));
-            REQUIRE(equals(result.at(1, 2), original.at(1, 2) * scalar));
+            REQUIRE(Utility::equals(result.at(0, 0), original.at(0, 0) * scalar));
+            REQUIRE(Utility::equals(result.at(0, 1), original.at(0, 1) * scalar));
+            REQUIRE(Utility::equals(result.at(0, 2), original.at(0, 2) * scalar));
+            REQUIRE(Utility::equals(result.at(1, 0), original.at(1, 0) * scalar));
+            REQUIRE(Utility::equals(result.at(1, 1), original.at(1, 1) * scalar));
+            REQUIRE(Utility::equals(result.at(1, 2), original.at(1, 2) * scalar));
         });
     }
 

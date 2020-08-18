@@ -10,7 +10,7 @@
 #include <cmath>
 #include <optional>
 
-#include "../Utils.h"
+#include "../Utility/FloatingPointEquals.h"
 
 namespace GEM {
 
@@ -197,7 +197,7 @@ namespace GEM {
     template<typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
     std::optional<Matrix<double, 2, 2>> inverse(const Matrix<T, 2, 2>& matrix) {
         auto det = determinant(matrix);
-        if (equals(det, 0.0)) {
+        if (Utility::equals(det, 0.0)) {
             return std::nullopt;
         }
 
@@ -216,7 +216,7 @@ namespace GEM {
     template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
     std::optional<Matrix<double, N, N>> inverse(const Matrix<T, N, N>& matrix) {
         auto det = determinant(matrix);
-        if (equals(det, 0.0)) {
+        if (Utility::equals(det, 0.0)) {
             return std::nullopt;
         }
 
@@ -232,7 +232,7 @@ namespace GEM {
 
     template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
     bool is_invertible(const Matrix<T, N, N>& matrix) {
-        return !equals(determinant(matrix), 0.0);
+        return !Utility::equals(determinant(matrix), 0.0);
     }
     
 }
