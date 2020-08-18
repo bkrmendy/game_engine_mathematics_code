@@ -3,8 +3,10 @@
 //
 
 #include <catch2/catch.hpp>
+#include <rapidcheck.h>
 
 #include "../src/Matrix/Matrix.h"
+#include "../src/Utils.h"
 
 using namespace GEM;
 
@@ -33,7 +35,7 @@ TEST_CASE("Matrix operations", "[matrix]") {
         REQUIRE(original.at(1, 2) == 6);
     }
 
-    SECTION("Matrix::diagonal") {
+    SECTION("Matrix diagonal") {
         Matrix<int, 3, 3> diagonal{{
             1, 0, 0,
             0, 1, 0,
@@ -51,7 +53,7 @@ TEST_CASE("Matrix operations", "[matrix]") {
         REQUIRE(!is_diagonal(not_diagonal));
     }
 
-    SECTION("Matrix::transpose") {
+    SECTION("Matrix transpose") {
         Matrix<int, 2, 3> original{{
                                            1, 2, 3,
                                            4, 5, 6,
@@ -68,21 +70,22 @@ TEST_CASE("Matrix operations", "[matrix]") {
     }
 
     SECTION("Matrix multiplication by scalar") {
-        Matrix<int, 2, 3> original{{
+
+        Matrix<double, 2, 3> original{{
                                            1, 2, 3,
                                            4, 5, 6,
                                    }};
 
-        const int scalar = 2;
+        rc::check("Matrix multiplication by scalar",[&original](double scalar) {
+            auto result = original * scalar;
 
-        auto result = original * scalar;
-
-        REQUIRE(result.at(0, 0) / scalar == 1);
-        REQUIRE(result.at(0, 1) / scalar == 2);
-        REQUIRE(result.at(0, 2) / scalar == 3);
-        REQUIRE(result.at(1, 0) / scalar == 4);
-        REQUIRE(result.at(1, 1) / scalar == 5);
-        REQUIRE(result.at(1, 2) / scalar == 6);
+            REQUIRE(equals(result.at(0, 0), original.at(0, 0) * scalar));
+            REQUIRE(equals(result.at(0, 1), original.at(0, 1) * scalar));
+            REQUIRE(equals(result.at(0, 2), original.at(0, 2) * scalar));
+            REQUIRE(equals(result.at(1, 0), original.at(1, 0) * scalar));
+            REQUIRE(equals(result.at(1, 1), original.at(1, 1) * scalar));
+            REQUIRE(equals(result.at(1, 2), original.at(1, 2) * scalar));
+        });
     }
 
     SECTION("Adding scalar to matrix") {
@@ -91,16 +94,16 @@ TEST_CASE("Matrix operations", "[matrix]") {
                                            4, 5, 6,
                                    }};
 
-        const int scalar = 2;
+        rc::check("Matrix multiplication by scalar",[&original](int scalar) {
+            auto result = original + scalar;
 
-        auto result = original + scalar;
-
-        REQUIRE(result.at(0, 0) == 3);
-        REQUIRE(result.at(0, 1) == 4);
-        REQUIRE(result.at(0, 2) == 5);
-        REQUIRE(result.at(1, 0) == 6);
-        REQUIRE(result.at(1, 1) == 7);
-        REQUIRE(result.at(1, 2) == 8);
+            REQUIRE(result.at(0, 0) == original.at(0, 0) + scalar);
+            REQUIRE(result.at(0, 1) == original.at(0, 1) + scalar);
+            REQUIRE(result.at(0, 2) == original.at(0, 2) + scalar);
+            REQUIRE(result.at(1, 0) == original.at(1, 0) + scalar);
+            REQUIRE(result.at(1, 1) == original.at(1, 1) + scalar);
+            REQUIRE(result.at(1, 2) == original.at(1, 2) + scalar);
+        });
     }
 
     SECTION("Adding matrix to matrix") {
@@ -167,6 +170,102 @@ TEST_CASE("Matrix operations", "[matrix]") {
             }};
 
             REQUIRE(result == actualResult);
+        }
+    }
+
+    SECTION("Submatrix", "[Matrix]") {
+        auto matrix = Matrix<int, 3, 3> {{
+                                                 1,2,3,
+                                                 4,5,6,
+                                                 7, 8, 9
+                                         }};
+
+        auto submatrix1 = submatrix(matrix, 0, 0);
+
+        auto actualSubmatrix1 = Matrix<int, 2, 2>{{
+                                                          5,6,
+                                                          8,9
+                                                  }};
+
+        REQUIRE(submatrix1 == actualSubmatrix1);
+
+        auto submatrix2 = submatrix(matrix, 1, 1);
+
+        auto actualSubmatrix2 = Matrix<int, 2, 2>{{
+                                                          1, 3,
+                                                          7, 9
+                                                  }};
+
+        REQUIRE(submatrix2 == actualSubmatrix2);
+
+        auto submatrix3 = submatrix(matrix, 2, 2);
+
+        auto actualSubmatrix3 = Matrix<int, 2, 2> {{
+                                                           1, 2,
+                                                           4, 5
+                                                   }};
+
+        REQUIRE(submatrix3 == actualSubmatrix3);
+    }
+
+    SECTION("Determinant", "[Matrix]") {
+        SECTION("2x2") {
+            auto matrix = Matrix<int, 2, 2>{{
+                                                       1,2,
+                                                       3,4
+                                               }};
+
+            REQUIRE(determinant(matrix) == -2);
+
+            auto matrixRowsExchanged = Matrix<int, 2, 2> {{
+                                                                     3,4,
+                                                                     1,2
+                                                             }};
+
+            REQUIRE(determinant(matrixRowsExchanged) == -determinant(matrix));
+
+            auto matrixRowsMultiplied = Matrix<int, 2, 2> {{
+                                                                      2,4,
+                                                                      3,4
+                                                              }};
+
+            REQUIRE(determinant(matrixRowsMultiplied) == determinant(matrix) * 2);
+
+            auto matrixIdenticalRows = Matrix<int, 2, 2> {{
+                                                                     1,2,
+                                                                     1,2
+                                                             }};
+
+            REQUIRE(determinant(matrixIdenticalRows) == 0);
+        }
+
+        SECTION("4x4") {
+            auto matrix = Matrix<int, 4, 4> {{
+                                                        1,12,3,14,
+                                                        5,6,7,8,
+                                                        9, 10, 11, 12,
+                                                        13, 14, 15, 17
+                                                }};
+
+            REQUIRE(determinant(matrix) == 80);
+
+            auto matrixRowsExchanged = Matrix<int, 4, 4> {{
+                                                                     1,12,3,14,
+                                                                     9, 10, 11, 12,
+                                                                     5,6,7,8,
+                                                                     13, 14, 15, 17
+                                                             }};
+
+            REQUIRE(determinant(matrixRowsExchanged) == -determinant(matrix));
+
+            auto matrixIdenticalRows = Matrix<int, 4, 4> {{
+                                                                     1,12,3,14,
+                                                                     1,12,3,14,
+                                                                     5,6,7,8,
+                                                                     13, 14, 15, 17
+                                                             }};
+
+            REQUIRE(determinant(matrixIdenticalRows) == 0);
         }
     }
 }

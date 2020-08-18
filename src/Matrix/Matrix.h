@@ -7,6 +7,7 @@
 
 #include <type_traits>
 #include <array>
+#include <cmath>
 
 namespace GEM {
 
@@ -135,6 +136,51 @@ namespace GEM {
         }
         return is_diagonal;
     }
+
+    template<typename T, size_t N, size_t M, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    Matrix<T, N-1, M-1> submatrix(const Matrix<T, N, M>& matrix, size_t ri, size_t rj) {
+        assert(N > 1);
+        assert(M > 1);
+
+        assert(ri < N);
+        assert(rj < M);
+
+        Matrix<T, N-1, M-1> result{};
+
+        for (size_t i = 0; i < N; ++i) {
+            for(size_t j = 0; j < M; ++j) {
+                if (i != ri && j != rj) {
+                    size_t destinationI = i > ri ? i - 1 : i;
+                    size_t destinationJ = j > rj ? j - 1 : j;
+                    result.at(destinationI, destinationJ) = matrix.at(i, j);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    template<typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    double determinant(const Matrix<T, 2, 2>& matrix) {
+        return matrix.at(0, 0) * matrix.at(1, 1) - matrix.at(0, 1) * matrix.at(1, 0);
+    }
+
+    template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    double determinant(const Matrix<T, N, N>& matrix) {
+        double acc = 0;
+
+        for (size_t n = 0; n < N; ++n) {
+            auto cofactor = std::pow(-1, n * 1) * determinant(submatrix(matrix, n, 1));
+            acc += matrix.at(n, 1) * cofactor;
+        }
+
+        return acc;
+    }
+
+//    template<typename T, size_t N, size_t M, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+//    Matrix<T, N, M> inverse(const Matrix<T, N, M>& matrix) {
+//
+//    }
     
 }
 
