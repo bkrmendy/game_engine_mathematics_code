@@ -237,6 +237,18 @@ TEST_CASE("Matrix operations", "[matrix]") {
                                                              }};
 
             REQUIRE(determinant(matrixIdenticalRows) == 0);
+
+            auto mat1 = Matrix<int, 2,2> {{
+                1,2,
+                3,4
+            }};
+
+            auto mat2 = Matrix<int, 2,2>{{
+                5,6,
+                7,8
+            }};
+
+            REQUIRE(determinant(mat1 * mat2) == determinant(mat1) * determinant(mat2));
         }
 
         SECTION("4x4") {
@@ -266,6 +278,20 @@ TEST_CASE("Matrix operations", "[matrix]") {
                                                              }};
 
             REQUIRE(determinant(matrixIdenticalRows) == 0);
+
+            auto matrix1 = Matrix<int, 3, 3> {{
+                1,2,4,
+                3,5,6,
+                7,8,9
+            }};
+
+            auto matrix2 = Matrix<int, 3, 3> {{
+                                                      1,2,4,
+                                                      3,5,7,
+                                                      6,8,9
+                                              }};
+
+            REQUIRE(determinant(matrix1 * matrix2) == determinant(matrix1) * determinant(matrix2));
         }
     }
 }

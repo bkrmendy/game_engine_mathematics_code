@@ -170,7 +170,7 @@ namespace GEM {
         double acc = 0;
 
         for (size_t n = 0; n < N; ++n) {
-            auto cofactor = std::pow(-1, n * 1) * determinant(submatrix(matrix, n, 1));
+            auto cofactor = std::pow(-1, n + 1) * determinant(submatrix(matrix, n, 1));
             acc += matrix.at(n, 1) * cofactor;
         }
 
