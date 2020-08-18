@@ -53,13 +53,54 @@ namespace GEM::Transforms {
         }};
     }
 
-    Matrix<double, 3, 3> Rotation3(Utility::Radian angle) {
+    Matrix<double, 3, 3> Rotation3Z(Utility::Radian angle) {
         return Matrix<double, 3, 3> {{
-                               std::cos(angle), -std::sin(angle), 0,
-                               std::sin(angle), std::cos(angle), 0,
-                               0, 0, 1
+           std::cos(angle), -std::sin(angle), 0,
+           std::sin(angle), std::cos(angle), 0,
+           0, 0, 1
         }};
     }
+
+    Matrix<double, 3, 3> Rotation3X(Utility::Radian angle) {
+        return Matrix<double, 3, 3> {{
+            1, 0, 0,
+             0 ,std::cos(angle), -std::sin(angle),
+             0, std::sin(angle), std::cos(angle),
+         }};
+    }
+
+    Matrix<double, 3, 3> Rotation3Y(Utility::Radian angle) {
+        return Matrix<double, 3, 3> {{
+                 std::cos(angle), 0, -std::sin(angle),
+                 0,1, 0,
+                 -std::sin(angle), 0 , std::cos(angle),
+         }};
+    }
+
+    Matrix<double, 3, 3> Rotation3(Vector<3, double> axis, Utility::Radian angle) {
+        auto s = std::sin(angle);
+        auto c = std::cos(angle);
+
+        auto a = c + (1 - c) * axis.at(0) * axis.at(0);
+        auto b = (1-c) * axis.at(0) * axis.at(1) - s * axis.at(2);
+        auto cc = (1-c) * axis.at(0)*axis.at(2) + s*axis.at(1);
+
+        auto d = (1-c) * axis.at(0) * axis.at(1) + s* axis.at(2);
+        auto e = c + (1-c) * axis.at(1) * axis.at(1);
+        auto f = (1-c) * axis.at(1) * axis.at(2) - s*axis.at(0);
+
+        auto g = (1-c) * axis.at(0) * axis.at(2) - s * axis.at(1);
+        auto h = (1-c) * axis.at(1) + axis.at(2) + s*axis.at(0);
+        auto i = c + (1-c) * axis.at(2) * axis.at(2);
+
+
+        return Matrix<double, 3, 3> {{
+            a, b, cc,
+            d, e, f,
+            g, h, i
+        }};
+    }
+
 }
 
 #endif //MYPROJECT_TRANSFORMS_H
