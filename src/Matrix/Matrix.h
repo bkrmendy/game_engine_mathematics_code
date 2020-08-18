@@ -16,7 +16,7 @@ namespace GEM {
     public:
         Matrix(std::array<T, N * M> elements) : elements_{elements} {}
 
-        T at(size_t i, size_t j) const {
+        const T& at(size_t i, size_t j) const {
             assert(i < N);
             assert(j < M);
             return elements_.at(i * M + j);

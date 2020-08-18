@@ -21,62 +21,73 @@ namespace GEM {
             return elems_.at(idx);
         }
 
-        bool operator==(const Vector<N, T> &other) const {
-            auto result = true;
-            for (size_t i = 0; i < N; ++i) {
-                result = result && (elems_.at(i) == other.at(i));
-            }
-            return result;
-        }
-
-        bool operator!=(const Vector<N, T> &other) const {
-            return !(*this == other);
-        }
-
         Vector<N, T> negate() const {
-            return (*this) * -1;
-        }
-
-        Vector<N, T> operator+(const T &scalar) const {
-            auto newElems = elems_;
-            for (auto &elem : newElems) {
-                elem += scalar;
-            }
-            return Vector<N, T>(newElems);
-        }
-
-        Vector<N, T> operator+(const Vector<N, T> &other) const {
             std::array<T, N> elems{};
             for (size_t i = 0; i < N; ++i) {
-                elems.at(i) = this->at(i) + other.at(i);
+                elems.at(i) = -1 * this->at(i);
             }
             return Vector(elems);
         }
-
-        Vector<N, T> operator*(const T &scalar) const {
-            auto newElems = elems_;
-            for (auto &elem : newElems) {
-                elem *= scalar;
-            }
-            return Vector<N, T>(newElems);
-        }
-
-        double magnitude() const {
-            double result = 0;
-            for (auto elem : elems_) {
-                result += elem * elem;
-            }
-            return sqrt(result);
-        }
-
-        T dot(const Vector<N, T> &other) const {
-            T result = 0;
-            for (size_t t = 0; t < N; ++t) {
-                result += this->at(t) * other.at(t);
-            }
-            return result;
-        }
     };
+
+    template<typename T, size_t N, typename std::enable_if<std::is_floating_point<T>::value>::type * = nullptr>
+    bool operator==(const Vector<N, T> &one, const Vector<N, T> &other) {
+        auto result = true;
+        for (size_t i = 0; i < N; ++i) {
+            result = result && equals(one.at(i), other.at(i));
+        }
+        return result;
+    }
+
+    template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    bool operator==(const Vector<N, T> &one, const Vector<N, T> &other) {
+        auto result = true;
+        for (size_t i = 0; i < N; ++i) {
+            result = result && (one.at(i) == other.at(i));
+        }
+        return result;
+    }
+
+    template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    bool operator!=(const Vector<N, T> &one, const Vector<N, T> &other) {
+        return !(one == other);
+    }
+
+    template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    Vector<N, T> operator+(const Vector<N, T>& vector, const T &scalar) {
+        std::array<T, N> elems{};
+        for (size_t i = 0; i < N; ++i) {
+            elems.at(i) = vector.at(i) + scalar;
+        }
+        return Vector(elems);
+    }
+
+    template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    Vector<N, T> operator+(const Vector<N, T>& vector, const Vector<N, T> &other) {
+        std::array<T, N> elems{};
+        for (size_t i = 0; i < N; ++i) {
+            elems.at(i) = vector.at(i) + other.at(i);
+        }
+        return Vector(elems);
+    }
+
+    template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    double magnitude(const Vector<N, T> &vector) {
+        double result = 0;
+        for (size_t t = 0; t < N; ++t) {
+            result += vector.at(t) * vector.at(t);
+        }
+        return sqrt(result);
+    }
+
+    template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    T dot(const Vector<N, T> &vector, const Vector<N, T> &other) {
+        T result = 0;
+        for (size_t t = 0; t < N; ++t) {
+            result += vector.at(t) * other.at(t);
+        }
+        return result;
+    }
 
     template<typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
     Vector<3, T> cross(const Vector<3, T> &p, const Vector<3, T> &q) {

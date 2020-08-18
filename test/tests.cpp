@@ -9,17 +9,6 @@
 
 using namespace GEM;
 
-template <size_t N, typename T>
-Vector<N, T> scalarAdd(const Vector<N, T>& v1, const T& scalar) {
-    return v1 + scalar;
-
-}
-
-template <size_t N, typename T>
-T dotProduct(const Vector<N, T>& v1, const Vector<N, T>& v2) {
-    return v1.dot(v2);
-}
-
 TEST_CASE("Vector operations", "[Vectors]")
 {
     SECTION("Vector negation", "[Vector]") {
@@ -34,7 +23,7 @@ TEST_CASE("Vector operations", "[Vectors]")
     SECTION("Vector scalar addition", "[Vector]") {
         rc::check("Vector scalar addition", [](const int scalar) {
             Vector<3, int> v1{{1, 2, 3}};
-            auto result = scalarAdd(v1, scalar);
+            auto result = v1 + scalar;
             for (size_t i = 0; i < 3; ++i) {
                 REQUIRE(result.at(i) - scalar == v1.at(i));
             }
@@ -53,16 +42,16 @@ TEST_CASE("Vector operations", "[Vectors]")
 
     SECTION("Magnitude", "[Vector]") {
         Vector<2, int> v{{1, 1}};
-        REQUIRE(v.magnitude() == sqrt(2));
+        REQUIRE(magnitude(v) == sqrt(2));
     }
 
     SECTION("Vector dot products", "[Vector]") {
         Vector<3, int> v1{{1,2,3}};
         Vector<3, int> v2{{3,2,1}};
-        REQUIRE(dotProduct(v1, v2) == 10);
-        REQUIRE(dotProduct(v1, v2) == dotProduct(v2, v1));
-        REQUIRE(dotProduct(v1, v1) == v1.magnitude() * v1.magnitude());
-        REQUIRE(dotProduct(v1, v2) <= v1.magnitude() * v2.magnitude());
+        REQUIRE(dot(v1, v2) == 10);
+        REQUIRE(dot(v1, v2) == dot(v2, v1));
+        REQUIRE(dot(v1, v1) == magnitude(v1) * magnitude(v1));
+        REQUIRE(dot(v1, v2) <= magnitude(v1) * magnitude(v2));
     }
 
     SECTION("Vector cross products", "[Vector]") {
@@ -72,7 +61,7 @@ TEST_CASE("Vector operations", "[Vectors]")
 
         REQUIRE(cross(v1, v2) == result);
         REQUIRE(cross(v2, v1) == result.negate());
-        REQUIRE(cross(v1, v2).dot(v1) == 0);
-        REQUIRE(cross(v1, v2).dot(v2) == 0);
+        REQUIRE(dot(cross(v1, v2), v1) == 0);
+        REQUIRE(dot(cross(v1, v2), v2) == 0);
     }
 }
