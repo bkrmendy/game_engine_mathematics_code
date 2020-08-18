@@ -15,6 +15,36 @@ TEST_CASE("Matrix operations", "[matrix]") {
         Matrix<int, 2, 2> mat{{1, 0, 0, 1}};
     }
 
+    SECTION("Can make identity matrix") {
+        auto id2x2 = Matrix<int, 2, 2>::Identity();
+        auto actualId2x2 = Matrix<int, 2, 2>{{
+            1, 0,
+            0, 1
+        }};
+
+        REQUIRE(id2x2 == actualId2x2);
+
+        auto id3x3 = Matrix<double, 3, 3>::Identity();
+        auto actualId3x3 = Matrix<double, 3, 3>{{
+                                                     1, 0, 0,
+                                                     0, 1, 0,
+                                                     0, 0, 1
+                                             }};
+
+        REQUIRE(id3x3 == actualId3x3);
+
+        auto id4x4 = Matrix<float, 4, 4>::Identity();
+        auto actualId4x4 = Matrix<float, 4, 4>{{
+                                    1, 0, 0, 0,
+                                    0, 1, 0, 0,
+                                    0, 0, 1, 0,
+                                    0, 0, 0, 1
+                            }};
+
+        REQUIRE(id4x4 == actualId4x4);
+
+    }
+
     SECTION("Can access matrix properly") {
         Matrix<int, 2, 2> mat{{1, 2, 3, 4}};
         REQUIRE(mat.at(0, 0) == 1);
@@ -306,6 +336,7 @@ TEST_CASE("Matrix operations", "[matrix]") {
             1.5, -0.5
         }};
 
+        REQUIRE(is_invertible(matrix2x2));
         REQUIRE(inverse(matrix2x2) == actualInverse2x2);
 
         auto matrix3x3 = Matrix<double, 3,3> {{
@@ -320,6 +351,17 @@ TEST_CASE("Matrix operations", "[matrix]") {
             -5, 4, 1
         }};
 
+        auto result = inverse(matrix3x3);
+
+        REQUIRE(is_invertible(matrix3x3));
+        REQUIRE(result.has_value());
+
         REQUIRE(inverse(matrix3x3) == actualInverse3x3);
+
+        REQUIRE(result.value() * matrix3x3 == matrix3x3 * result.value());
+
+        REQUIRE(result.value() * matrix3x3 == Matrix<double, 3, 3>::Identity());
+
+        REQUIRE(matrix3x3 * result.value() == Matrix<double, 3, 3>::Identity());
     }
 }

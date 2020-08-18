@@ -8,6 +8,9 @@
 #include <type_traits>
 #include <array>
 #include <cmath>
+#include <optional>
+
+#include "../Utils.h"
 
 namespace GEM {
 
@@ -15,6 +18,20 @@ namespace GEM {
     class Matrix {
         std::array<T, N * M> elements_;
     public:
+        static Matrix<T, N, N> Identity() {
+            auto result = Matrix<T, N, N>{};
+            for (size_t i = 0; i < N; ++i) {
+                for (size_t j = 0; j < N; ++j) {
+                    if (i == j) {
+                        result.at(i, j) = 1;
+                    } else {
+                        result.at(i, j) = 0;
+                    }
+                }
+            }
+            return result;
+        }
+
         Matrix() : elements_{std::array<T, N*M>{}} { }
         Matrix(std::array<T, N * M> elements) : elements_{elements} { }
 
@@ -178,8 +195,11 @@ namespace GEM {
     }
 
     template<typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
-    Matrix<double, 2, 2> inverse(const Matrix<T, 2, 2>& matrix) {
+    std::optional<Matrix<double, 2, 2>> inverse(const Matrix<T, 2, 2>& matrix) {
         auto det = determinant(matrix);
+        if (equals(det, 0.0)) {
+            return std::nullopt;
+        }
 
         auto a = static_cast<double>(matrix.at(0,0));
         auto b = static_cast<double>(matrix.at(0,1));
@@ -194,8 +214,12 @@ namespace GEM {
     }
 
     template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
-    Matrix<double, N, N> inverse(const Matrix<T, N, N>& matrix) {
+    std::optional<Matrix<double, N, N>> inverse(const Matrix<T, N, N>& matrix) {
         auto det = determinant(matrix);
+        if (equals(det, 0.0)) {
+            return std::nullopt;
+        }
+
         auto result = Matrix<double, N, N>{};
         for (size_t i = 0; i < N; ++i) {
             for(size_t j = 0; j < N; ++j) {
@@ -204,6 +228,11 @@ namespace GEM {
             }
         }
         return result;
+    }
+
+    template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    bool is_invertible(const Matrix<T, N, N>& matrix) {
+        return !equals(determinant(matrix), 0.0);
     }
     
 }
