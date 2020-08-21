@@ -6,6 +6,7 @@
 #include <rapidcheck.h>
 
 #include "../src/Vector/Vector.h"
+#include "../src/Utility/FloatingPointEquals.h"
 
 using namespace GEM;
 
@@ -37,6 +38,18 @@ TEST_CASE("Vector operations", "[Vectors]")
             REQUIRE(result.at(0) == v1.at(0) * scalar);
             REQUIRE(result.at(1) == v1.at(1) * scalar);
             REQUIRE(result.at(2) == v1.at(2) * scalar);
+        });
+    }
+
+    SECTION("Vector-scalar division", "[Vector]") {
+        Vector<3, double> v1{{1, 2, 3}};
+        rc::check("Vector-scalar division", [&v1](const double scalar) {
+            RC_PRE(!Utility::equals(scalar, 0.0));
+
+            auto result = v1 / scalar;
+            REQUIRE(result.at(0) == v1.at(0) / scalar);
+            REQUIRE(result.at(1) == v1.at(1) / scalar);
+            REQUIRE(result.at(2) == v1.at(2) / scalar);
         });
     }
 

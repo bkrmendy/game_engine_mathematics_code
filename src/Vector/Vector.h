@@ -88,6 +88,16 @@ namespace GEM {
     }
 
     template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    Vector<N, T> operator/(const Vector<N, T>& vector, const T& scalar) {
+        assert(scalar != 0.0);
+        std::array<T, N> elems{};
+        for (size_t i = 0; i < N; ++i) {
+            elems.at(i) = vector.at(i) / scalar;
+        }
+        return Vector(elems);
+    }
+
+    template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
     double magnitude(const Vector<N, T> &vector) {
         double result = 0;
         for (size_t t = 0; t < N; ++t) {
