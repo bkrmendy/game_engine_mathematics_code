@@ -251,6 +251,16 @@ namespace GEM {
     bool is_invertible(const Matrix<T, N, N>& matrix) {
         return !Utility::equals(determinant(matrix), 0.0);
     }
+
+    template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    Matrix<T, 4, 4> asHomogenous(const Matrix<T, 3, 3>& matrix) {
+        return Matrix<T, 4, 4> {{
+            matrix.at(0, 0), matrix.at(0, 1), matrix.at(0, 2), 0,
+            matrix.at(1, 0), matrix.at(1, 1), matrix.at(1, 2), 0,
+            matrix.at(2, 0), matrix.at(2, 1), matrix.at(2, 2), 0,
+            0, 0, 0, 1
+        }};
+    }
     
 }
 
