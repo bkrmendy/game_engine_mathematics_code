@@ -124,7 +124,7 @@ TEST_CASE("Matrix operations", "[matrix]") {
                                            4, 5, 6,
                                    }};
 
-        rc::check("Matrix multiplication by scalar",[&original](int scalar) {
+        rc::check("Adding scalar to matrix",[&original](int scalar) {
             auto result = original + scalar;
 
             REQUIRE(result.at(0, 0) == original.at(0, 0) + scalar);
