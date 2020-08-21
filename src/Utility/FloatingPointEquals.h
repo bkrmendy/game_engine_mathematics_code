@@ -16,9 +16,6 @@ bool equals(const T &a, const T &b, T epsilon = std::numeric_limits<T>::epsilon(
     double maxAB = std::max({ 1.0, std::fabs(a), std::fabs(b) });
     auto res = std::fabs(a - b) <= epsilon * maxAB;
     return res;
-
-//    0.00000000000000088817841970012523
-//    0.00000000000000022204460492503131
 }
 }// namespace GEM::Utility
 

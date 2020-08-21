@@ -97,10 +97,14 @@ TEST_CASE("Matrix operations", "[matrix]") {
         const Matrix<int, 3, 2> actualResult = transposed(original);
 
         REQUIRE(actualResult == result);
+
+        rc::check("Matrix transpose applied twice yields original matrix", [](std::array<int, 16> elems) {
+           Matrix<int, 4, 4> matrix = Matrix<int, 4, 4>{elems};
+           REQUIRE(transposed(transposed(matrix)) == matrix);
+        });
     }
 
     SECTION("Matrix multiplication by scalar") {
-
         Matrix<double, 2, 3> original{{
                                            1, 2, 3,
                                            4, 5, 6,
@@ -324,17 +328,13 @@ TEST_CASE("Matrix operations", "[matrix]") {
 
             REQUIRE(determinant(matrixIdenticalRows) == 0);
 
-            auto mat1 = Matrix<int, 2,2> {{
-                1,2,
-                3,4
-            }};
+            rc::check("Matrix determinants", [](std::array<double, 4> e1, std::array<double, 4> e2) {
+                auto mat1 = Matrix<double, 2,2> {e1};
 
-            auto mat2 = Matrix<int, 2,2>{{
-                5,6,
-                7,8
-            }};
+                auto mat2 = Matrix<double, 2,2>{e2};
 
-            REQUIRE(determinant(mat1 * mat2) == determinant(mat1) * determinant(mat2));
+                REQUIRE(Utility::equals(determinant(mat1 * mat2), determinant(mat1) * determinant(mat2), 0.0001));
+            });
         }
 
         SECTION("4x4") {
@@ -365,19 +365,13 @@ TEST_CASE("Matrix operations", "[matrix]") {
 
             REQUIRE(determinant(matrixIdenticalRows) == 0);
 
-            auto matrix1 = Matrix<int, 3, 3> {{
-                1,2,4,
-                3,5,6,
-                7,8,9
-            }};
+            rc::check("Matrix determinants", [](std::array<double, 9> e1, std::array<double, 9> e2) {
+                auto matrix1 = Matrix<double, 3, 3> {e1};
 
-            auto matrix2 = Matrix<int, 3, 3> {{
-                                                      1,2,4,
-                                                      3,5,7,
-                                                      6,8,9
-                                              }};
+                auto matrix2 = Matrix<double, 3, 3> {e2};
 
-            REQUIRE(determinant(matrix1 * matrix2) == determinant(matrix1) * determinant(matrix2));
+                REQUIRE(Utility::equals(determinant(matrix1 * matrix2), determinant(matrix1) * determinant(matrix2), 0.0001));
+            });
         }
     }
 
