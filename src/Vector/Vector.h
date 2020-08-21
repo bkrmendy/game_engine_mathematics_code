@@ -7,7 +7,10 @@
 
 #include <type_traits>
 #include <array>
-#include <functional>
+#include <algorithm>
+#include <cmath>
+
+#include "../Utility/FloatingPointEquals.h"
 
 namespace GEM {
 
@@ -37,20 +40,15 @@ namespace GEM {
         }
     };
 
-    template<typename T, size_t N, typename std::enable_if<std::is_floating_point<T>::value>::type * = nullptr>
-    bool operator==(const Vector<N, T> &one, const Vector<N, T> &other) {
-        auto result = true;
-        for (size_t i = 0; i < N; ++i) {
-            result = result && equals(one.at(i), other.at(i));
-        }
-        return result;
-    }
-
     template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
     bool operator==(const Vector<N, T> &one, const Vector<N, T> &other) {
         auto result = true;
         for (size_t i = 0; i < N; ++i) {
-            result = result && (one.at(i) == other.at(i));
+            if constexpr (std::is_floating_point<T>::value) {
+                result = result && Utility::equals(one.at(i), other.at(i));
+            } else {
+                result = result && (one.at(i) == other.at(i));
+            }
         }
         return result;
     }
@@ -103,7 +101,7 @@ namespace GEM {
         for (size_t t = 0; t < N; ++t) {
             result += vector.at(t) * vector.at(t);
         }
-        return sqrt(result);
+        return std::sqrt(result);
     }
 
     template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
