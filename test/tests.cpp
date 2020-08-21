@@ -20,13 +20,23 @@ TEST_CASE("Vector operations", "[Vectors]")
         }
     }
 
-    SECTION("Vector scalar addition", "[Vector]") {
-        rc::check("Vector scalar addition", [](const int scalar) {
-            Vector<3, int> v1{{1, 2, 3}};
+    SECTION("Vector-scalar addition", "[Vector]") {
+        Vector<3, int> v1{{1, 2, 3}};
+        rc::check("Vector scalar addition", [&v1](const int scalar) {
             auto result = v1 + scalar;
-            for (size_t i = 0; i < 3; ++i) {
-                REQUIRE(result.at(i) - scalar == v1.at(i));
-            }
+            REQUIRE(result.at(0) == v1.at(0) + scalar);
+            REQUIRE(result.at(1) == v1.at(1) + scalar);
+            REQUIRE(result.at(2) == v1.at(2) + scalar);
+        });
+    }
+
+    SECTION("Vector-scalar multiplication", "[Vector]") {
+        Vector<3, int> v1{{1, 2, 3}};
+        rc::check("Vector-scalar multiplication", [&v1](const int scalar) {
+            auto result = v1 * scalar;
+            REQUIRE(result.at(0) == v1.at(0) * scalar);
+            REQUIRE(result.at(1) == v1.at(1) * scalar);
+            REQUIRE(result.at(2) == v1.at(2) * scalar);
         });
     }
 

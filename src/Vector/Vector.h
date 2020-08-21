@@ -7,6 +7,7 @@
 
 #include <type_traits>
 #include <array>
+#include <functional>
 
 namespace GEM {
 
@@ -73,6 +74,15 @@ namespace GEM {
         std::array<T, N> elems{};
         for (size_t i = 0; i < N; ++i) {
             elems.at(i) = vector.at(i) + other.at(i);
+        }
+        return Vector(elems);
+    }
+
+    template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
+    Vector<N, T> operator*(const Vector<N, T>& vector, const T& scalar) {
+        std::array<T, N> elems{};
+        for (size_t i = 0; i < N; ++i) {
+            elems.at(i) = vector.at(i) * scalar;
         }
         return Vector(elems);
     }
