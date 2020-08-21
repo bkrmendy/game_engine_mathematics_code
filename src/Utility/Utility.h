@@ -10,7 +10,7 @@ namespace GEM::Utility {
         double radians;
         Radian(double radians) : radians{radians} { }
 
-        operator double() {
+        operator double() const {
             return radians;
         }
     };
