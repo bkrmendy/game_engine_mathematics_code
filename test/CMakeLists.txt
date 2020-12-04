@@ -12,7 +12,7 @@ target_link_libraries(catch_main PRIVATE project_options)
 
 add_compile_options(--coverage)
 
-add_executable(tests tests.cpp tests_matrix.cpp)
+add_executable(tests tests_vector.cpp tests_matrix.cpp)
 target_link_libraries(tests PRIVATE project_warnings project_options catch_main --coverage)
 
 # automatically discover tests that are defined in catch based test files you can modify the unittests. TEST_PREFIX to

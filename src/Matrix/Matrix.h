@@ -55,25 +55,18 @@ class Matrix
     }
 };
 
-template<typename T, size_t N, size_t M, typename std::enable_if<std::is_floating_point<T>::value>::type * = nullptr>
-bool operator==(const Matrix<float, N, M> &one, const Matrix<float, N, M> &other)
-{
-    bool result = true;
-    for (size_t i = 0; i < N; ++i) {
-        for (size_t j = 0; j < M; ++j) {
-            result = result && equals(one.at(i, j), other.at(i, j));
-        }
-    }
-    return result;
-}
-
 template<typename T, size_t N, size_t M, typename std::enable_if<std::is_arithmetic<T>::value>::type * = nullptr>
 bool operator==(const Matrix<T, N, M> &one, const Matrix<T, N, M> &other)
 {
     bool result = true;
     for (size_t i = 0; i < N; ++i) {
         for (size_t j = 0; j < M; ++j) {
-            result = result && one.at(i, j) == other.at(i, j);
+            if constexpr (std::is_floating_point<T>::value) {
+                T tolerance = static_cast<T>(0.0000001);
+                result = result && Utility::equals(one.at(i, j), other.at(i, j), tolerance);
+            } else {
+                result = result && one.at(i, j) == other.at(i, j);
+            }
         }
     }
     return result;
@@ -220,7 +213,7 @@ template<typename T, size_t N, typename std::enable_if<std::is_arithmetic<T>::va
 double determinant(const Matrix<T, N, N> &matrix)
 {
     double acc = 0;
-    size_t k = 1;
+    const size_t k = 1;
     for (size_t n = 0; n < N; ++n) {
         auto cofactor = std::pow(-1, n + k) * determinant(submatrix(matrix, n, k));
         acc += matrix.at(n, k) * cofactor;

@@ -392,16 +392,46 @@ TEST_CASE("Matrix operations", "[matrix]") {
         }
 
         SECTION("Properties") {
+            rc::check("inverse properties", []() {
+                auto elems = *rc::gen::container<std::array<double, 9>>(rc::gen::inRange(-100, 100));
+                auto matrix = Matrix<double, 3, 3>{elems};
+                RC_PRE(is_invertible(matrix));
+
+                REQUIRE(is_invertible(transposed(matrix)));
+
+                auto res = inverse(matrix);
+
+                REQUIRE(res.has_value());
+
+                auto inverted = res.value();
+
+                REQUIRE(is_invertible(inverted));
+
+                REQUIRE(inverted * matrix == matrix * inverted);
+
+                REQUIRE(inverted * matrix == Matrix<double, 3, 3>::Identity());
+
+                REQUIRE(matrix * inverted == Matrix<double, 3, 3>::Identity());
+
+                auto inverseAgain = inverse(inverted);
+
+
+                REQUIRE(inverseAgain.has_value());
+                REQUIRE(inverseAgain.value() == matrix);
+            });
+        }
+
+        SECTION("Units") {
             auto matrix3x3 = Matrix<double, 3,3> {{
-                                                          1,2,3,
-                                                          0,1,4,
-                                                          5,6,0
+                                                    1,2,3,
+                                                    0,1,4,
+                                                    5,6,0
                                                   }};
 
             auto actualInverse3x3 = Matrix<double, 3, 3> {{
-                                                                  -24, 18, 5,
-                                                                  20, -15, -4,
-                                                                  -5, 4, 1
+                                                            -24, 18, 5,
+                                                            20, -15, -4,
+                                                            -5, 4, 1
                                                           }};
 
             REQUIRE(is_invertible(matrix3x3));

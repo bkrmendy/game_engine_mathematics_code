@@ -13,7 +13,7 @@ namespace GEM::Utility {
 template<typename T, typename std::enable_if<std::is_floating_point<T>::value>::type * = nullptr>
 bool equals(const T &a, const T &b, T epsilon = std::numeric_limits<T>::epsilon())
 {
-    double maxAB = std::max({ 1.0, std::fabs(a), std::fabs(b) });
+    T maxAB = std::max({ static_cast<T>(1), std::fabs(a), std::fabs(b) });
     auto res = std::fabs(a - b) <= epsilon * maxAB;
     return res;
 }
