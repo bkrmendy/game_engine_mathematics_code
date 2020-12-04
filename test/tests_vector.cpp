@@ -85,7 +85,6 @@ TEST_CASE("Vector operations", "[Vectors]")
         REQUIRE(dot(vec1, vec2) == 10);
 
         Vector<3, double> g = Vector<3, double>{{0, 2, 1}};
-        Vector<3, double> h = Vector<3, double>{{0, 0, 0}};
 
         auto dott = dot(g, g);
         auto magni = magnitude(g) * magnitude(g);
