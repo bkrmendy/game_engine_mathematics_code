@@ -1,6 +1,6 @@
-add_executable(gem
-        main.cpp
+set (CMAKE_CXX_STANDARD 17)
 
+add_library(gem
         Vector/Vector.h
 
         Matrix/Matrix.h
@@ -22,8 +22,10 @@ add_executable(gem
         intersection/intersection.cpp
         )
 
+add_executable(gem_main main.cpp)
+
 target_link_libraries(
-        gem
+        gem_main
         PRIVATE project_options
                 project_warnings
                 CONAN_PKG::docopt.cpp

@@ -58,28 +58,16 @@ endif()
 set(CONAN_EXTRA_REQUIRES "")
 set(CONAN_EXTRA_OPTIONS "")
 
-if(CPP_STARTER_USE_IMGUI)
-  set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES} imgui-sfml/2.1@bincrafters/stable)
-
-  # set(CONAN_EXTRA_OPTIONS ${CONAN_EXTRA_OPTIONS} sfml:shared=False sfml:graphics=True sfml:audio=False
-  # sfml:window=True libalsa:disable_python=True)
-endif()
-
-if(CPP_STARTER_USE_SDL)
-  set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES} sdl2/2.0.10@bincrafters/stable)
-  # set(CONAN_EXTRA_OPTIONS ${CONAN_EXTRA_OPTIONS} sdl2:wayland=True)
-endif()
-
 include(cmake/Conan.cmake)
 run_conan()
+
+add_subdirectory(src)
 
 if(ENABLE_TESTING)
   enable_testing()
   message("Building Tests. Be sure to check out test/constexpr_tests for constexpr testing")
   add_subdirectory(test)
 endif()
-
-add_subdirectory(src)
 
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
 if(ENABLE_UNITY)
