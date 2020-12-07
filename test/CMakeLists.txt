@@ -13,6 +13,7 @@ target_link_libraries(catch_main PUBLIC CONAN_PKG::catch2)
 target_link_libraries(catch_main PUBLIC CONAN_PKG::rapidcheck)
 target_link_libraries(catch_main PRIVATE project_options)
 
+# set(CMAKE_CXX_FLAGS -fprofile-instr-generate -fcoverage-mapping)
 add_executable(tests tests_vector.cpp tests_matrix.cpp test_line.cpp)
 target_link_libraries(tests
                       PRIVATE project_warnings

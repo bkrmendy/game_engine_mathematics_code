@@ -12,7 +12,7 @@
 #include "../Vector/Vector.h"
 
 namespace GEM {
-    std::optional<Vector<4, float>> intersects(Line& line, Plane& plane);
+    std::optional<Vector<4, float>> intersects(const Line& line, const Plane& plane);
 }
 
 #endif//GAME_ENGINE_MATHEMATICS_INTERSECTION_H
