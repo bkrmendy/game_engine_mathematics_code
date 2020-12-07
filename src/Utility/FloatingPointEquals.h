@@ -10,15 +10,13 @@
 
 namespace GEM::Utility {
 // https://stackoverflow.com/a/15012792
-template<typename T, typename std::enable_if<std::is_floating_point<T>::value>::type * = nullptr>
-bool equals(const T &a, const T &b, T epsilon = std::numeric_limits<T>::epsilon())
-{
-    T maxAB = std::max({ static_cast<T>(1), std::fabs(a), std::fabs(b) });
-    auto res = std::fabs(a - b) <= epsilon * maxAB;
-    return res;
+    template<typename T, typename std::enable_if<std::is_floating_point<T>::value>::type * = nullptr>
+    bool equals(const T &a, const T &b, T epsilon = std::numeric_limits<T>::epsilon())
+    {
+        T maxAB = std::max({ static_cast<T>(1), std::fabs(a), std::fabs(b) });
+        auto res = std::fabs(a - b) <= epsilon * maxAB;
+        return res;
+    }
 }
-}// namespace GEM::Utility
-
-// namespace GEM::Utility
 
 #endif//MYPROJECT_FLOATINGPOINTEQUALS_H

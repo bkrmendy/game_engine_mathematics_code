@@ -6,6 +6,7 @@
 #define GAME_ENGINE_MATHEMATICS_PLANE_H
 
 #include "../Vector/Vector.h"
+
 namespace GEM {
     class Plane {
         Vector<4, float> hypernormal_;
@@ -15,9 +16,7 @@ namespace GEM {
             : hypernormal_{hypernormal}
             {}
 
-        const Vector<4, float>& hypernormal() const {
-            return hypernormal_;
-        }
+        const Vector<4, float>& hypernormal() const;
     };
 }
 

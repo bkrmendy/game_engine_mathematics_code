@@ -18,21 +18,14 @@ namespace GEM {
             , direction_{{0, 0, 0, 0}}
             { }
 
-        Line(const Vector<4, float> &origin, const Vector<4, float> &direction) {
-            assert(origin.at(3) == 1);
-            assert(direction.at(3) == 0);
+        Line(const Vector<4, float> &origin, const Vector<4, float> &direction);
 
-            this->origin_ = origin;
-            this->direction_ = direction;
-        }
+        const Vector<4, float>& origin() const;
 
-        const Vector<4, float>& origin() const {
-            return origin_;
-        }
-        const Vector<4, float>& direction() const {
-            return direction_;
-        }
+        const Vector<4, float>& direction() const;
     };
+
+    Vector<4, float> point_along_line(const Line& line, const float t);
 }
 
 #endif//GAME_ENGINE_MATHEMATICS_LINE_H

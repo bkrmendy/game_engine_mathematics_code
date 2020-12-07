@@ -57,8 +57,14 @@ add_executable(intro
         Quaternion/Quaternion.h
 
         Line/Line.h
+        Line/Line.cpp
 
-        Plane/Plane.h)
+        Plane/Plane.h
+        Plane/Plane.cpp
+
+        intersection/intersection.h
+        intersection/intersection.cpp
+        )
 
 target_link_libraries(
   intro
